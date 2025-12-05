@@ -1,0 +1,30 @@
+{
+  "monitors": [
+    {
+      "name": "Backend API Health",
+      "type": "HTTP(s)",
+      "url": "https://your-backend-url.onrender.com/health",
+      "interval": 300,
+      "timeout": 30,
+      "alertContacts": [],
+      "httpMethod": "GET",
+      "expectedStatusCode": 200
+    },
+    {
+      "name": "Frontend Application",
+      "type": "HTTP(s)",
+      "url": "https://your-frontend-url.vercel.app",
+      "interval": 300,
+      "timeout": 30,
+      "alertContacts": [],
+      "httpMethod": "GET",
+      "expectedStatusCode": 200
+    }
+  ],
+  "alertChannels": [
+    {
+      "type": "email",
+      "value": "your-email@example.com"
+    }
+  ]
+}

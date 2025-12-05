@@ -1,0 +1,40 @@
+name: Backend CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Deploy to Render
+      run: |
+        curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+    
+    - name: Wait for deployment
+      run: sleep 60
+    
+    - name: Health check
+      run: |
+        response=$(curl -s -o /dev/null -w "%{http_code}" ${{ secrets.BACKEND_URL }}/health)
+        if [ $response -eq 200 ]; then
+          echo "Deployment successful! Health check passed."
+        else
+          echo "Deployment may have failed. Health check returned: $response"
+          exit 1
+        fi
+    
+    # Alternative: Deploy to Railway
+    # - name: Deploy to Railway
+    #   uses: bervProject/railway-deploy@main
+    #   with:
+    #     railway_token: ${{ secrets.RAILWAY_TOKEN }}
+    #     service: ${{ secrets.RAILWAY_SERVICE }}
